@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Color Palette Extractor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container main-container">
+
+        <h1 class="text-center mb-4">Color Extractor</h1>
+
+        <!-- Image -->
+        <div class="text-center mb-5">
+            <img src="{{ photo }}" class="img-fluid rounded shadow uploaded-image" alt="Uploaded image">
+        </div>
+
+
+        <!-- Color Table -->
+        <div class="table-responsive mb-5">
+            <table class="table table-bordered table-hover text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Color</th>
+                        <th>RGB</th>
+                        <th>HSL</th>
+                        <th>HEX</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in colors.iterrows() %}
+                    <tr>
+                        <td>
+                            <div
+                                class="color-preview"
+                                style="background-color: {{ row['Code'] }};"
+                            ></div>
+                        </td>
+                        <td>
+                            {{ row["RGB"] }}
+                        </td>
+                        <td>
+                            {{ row["HSL"] }}
+                        </td>
+                        <td>
+                            {{ row["Code"] }}
+                        </td>
+                        <td>
+                            {{ "%.2f"|format(row["Percentage"]) }}%
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Form -->
+        <div class="card shadow-sm p-4 mx-auto" style="max-width: 600px;">
+            <h3 class="text-center mb-4">Extract Colors</h3>
+            <form action="{{ url_for('home') }}" method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.photo.label(class="form-label") }}
+                    {{ form.photo(class="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.color_number.label(class="form-label") }}
+                    {{ form.color_number(class="form-control") }}
+                </div>
+                <div class="d-flex justify-content-center gap-2">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('save_csv') }}" class="btn btn-success">Save CSV</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+    </script>
+</body>
+</html>
